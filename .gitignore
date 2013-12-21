@@ -1,0 +1,9 @@
+# temporary files
+*.swp
+*~
+
+# build files
+*.o
+sim_manager
+
+
