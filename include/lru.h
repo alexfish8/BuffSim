@@ -4,29 +4,27 @@
 #include <map>
 #include <list>
 
+#include "message_queue.h"
+#include "trace.h"
+#include "cache.h"
 
-class LRU {
-
-  public:
-    LRU(int);
-    ~LRU();
-
-    void cache_access(int);
-    int get_num_hits();
-    int get_num_requests();
-    int get_max_size();
+class LRU : public Cache {
 
   private:
-    int num_hits;
-    int num_requests;
-    int max_size;
+    typedef std::pair<int, int>  elem;
+    typedef std::list<elem> cache_t;
+    typedef cache_t::iterator cache_elem;
+    typedef std::map<elem, cache_elem> cache_map;
 
-    typedef std::list<int> Cache;
-    typedef std::map<int, Cache::iterator> CacheMap;
+    cache_t cache;
+    cache_map in_cache;
 
-    Cache *cache;
-    CacheMap *block_positions;
+  public:
+    LRU(MQueue<Trace>* queue, int max_cache_size, int block_size);
+    void do_cache_request(int inode, int block, Trace t);
 };
+
+
 
 #endif
 

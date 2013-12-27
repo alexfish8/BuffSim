@@ -1,11 +1,18 @@
-CC=g++
-SRC=sim_manager.cc lru.cc
-TARGET=sim_manager
+# Makefile
 
-all: sim_manager.cc lru.cc
-	$(CC) $(SRC) -o $(TARGET) 
+CC= g++
+INCLUDE = include
+LIB = -lboost_system -lboost_thread
+CCFLAGS = -I $(INCLUDE) $(LIB)
+SIM = lru.cc
+SRC = sim_manager.cc trace.cc cache.cc $(SIM)
+OBJ = $(SRC: %.cc=%.o)
+TARGET = sim_manager
+
+all: $(SRC)
+	$(CC) $(CCFLAGS) $(SRC) -o $(TARGET) 
 
 clean:
-	rm -rf *.o
+	rm -f *.o $(TARGET)
 
 

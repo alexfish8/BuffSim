@@ -1,71 +1,53 @@
+/*
+ * lru.cc
+ */
+
 #include <map>
 #include <list>
 
+#include "trace.h"
+#include <stdio.h>
+#include "cache.h"
 #include "lru.h"
 
-using namespace std;
+LRU::LRU(MQueue<Trace>*queue, int max_cache_size, int block_size) : Cache(queue, max_cache_size, block_size) {}
 
-LRU::LRU(int max_size) {
-  num_hits = 0;
-  num_requests = 0;
-  this->max_size = max_size;
-  cache = new Cache();
-  block_positions = new CacheMap();
-}
-
-int LRU::get_num_hits() {
-  return num_hits;
-}
-
-int LRU::get_num_requests() {
-  return num_requests;
-}
-
-int LRU::get_max_size() {
-  return max_size;
-}
-
-void LRU::cache_access(int block) {
-  CacheMap::iterator cache_entry = block_positions->find(block);
-
+void LRU::do_cache_request(int inode, int block, Trace t) {
+  printf("lru do_cache_request begin\n");
+  cache_map::iterator it = in_cache.find(std::make_pair(inode, block));
   // cache miss
-  if (cache_entry == block_positions->end()) {
+  if (it == in_cache.end()) {
+    printf("cache_miss\n");
+    if (cache.size() == get_cache_size()) {
+      // cache is full, evict least recently used block
+      printf("evicting block\n");
+      elem evict_block = cache.back();
+      in_cache.erase(evict_block);
+      cache.pop_back();
+      printf("exit cache evict block\n");
+    }
+    printf("don't have to evict\n");
 
-    // evict block
-    if (block_positions->size() == max_size) {
-      int lru_block = cache->back();
-      cache->pop_back();
-      block_positions->erase(block_positions->find(lru_block));
+    // add new block to cache
+    elem new_block = std::make_pair(inode, block);
+    cache.push_front(new_block);
+    in_cache.insert(std::make_pair(new_block, cache.begin()));
+    printf("added block to cache\n");
+  }
+
+
+    // cache hit
+    else {
+      printf("cache hit\n");
+      // move block to front
+      cache.erase(it->second);
+      cache.push_front(std::make_pair(inode, block));
+      set_num_hits(get_num_hits() + 1);
     }
 
-    cache->push_front(block);
-    block_positions->insert(std::pair<int, Cache::iterator>(block, cache->begin()));
+    set_num_requests(get_num_requests() + 1);
+    printf("request no: %d\n", get_num_requests());
   }
 
-  // cache hit
-  else {
-    cache->erase(cache_entry->second);
-    cache->push_front(block);
-    num_hits++;
-  }
 
-  num_requests++;
-}
 
-/*
-  public:
-    LRU();
-    ~LRU();
-
-    void cache_access(int);
-    int get_num_hits();
-    int get_num_requests();
-
-  private:
-    int num_hits;
-    int num_requests;
-
-    map<int, list<int>::iterator> *cache_position;
-    list<int> *cache;
-};
-*/

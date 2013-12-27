@@ -8,7 +8,8 @@
 
 #include <string>
 
-struct Trace {
+class Trace {
+public:
   long inode_no; // i-node of file being read/written to
   long offset;   // offset in file
   int num_bytes; // number of bytes being read or written
