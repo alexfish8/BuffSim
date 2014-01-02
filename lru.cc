@@ -13,32 +13,24 @@
 LRU::LRU(MQueue<Trace>*queue, int max_cache_size, int block_size) : Cache(queue, max_cache_size, block_size) {}
 
 void LRU::do_cache_request(int inode, int block, Trace t) {
-  printf("lru do_cache_request begin\n");
   cache_map::iterator it = in_cache.find(std::make_pair(inode, block));
   // cache miss
   if (it == in_cache.end()) {
-    printf("cache_miss\n");
     if (cache.size() == get_cache_size()) {
       // cache is full, evict least recently used block
-      printf("evicting block\n");
       elem evict_block = cache.back();
       in_cache.erase(evict_block);
       cache.pop_back();
-      printf("exit cache evict block\n");
     }
-    printf("don't have to evict\n");
 
     // add new block to cache
     elem new_block = std::make_pair(inode, block);
     cache.push_front(new_block);
     in_cache.insert(std::make_pair(new_block, cache.begin()));
-    printf("added block to cache\n");
   }
-
 
     // cache hit
     else {
-      printf("cache hit\n");
       // move block to front
       cache.erase(it->second);
       cache.push_front(std::make_pair(inode, block));
@@ -46,7 +38,6 @@ void LRU::do_cache_request(int inode, int block, Trace t) {
     }
 
     set_num_requests(get_num_requests() + 1);
-    printf("request no: %d\n", get_num_requests());
   }
 
 

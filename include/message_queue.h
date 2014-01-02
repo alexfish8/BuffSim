@@ -22,13 +22,11 @@ class MQueue {
     void enqueue(T elem) {
       boost::lock_guard<boost::mutex> lock(mut);
       queue.push(elem);
-      printf("enqueued some stuff\n");
       cv.notify_one();
     }
 
     T dequeue() {
       boost::unique_lock<boost::mutex> lock(mut);
-      printf("got to the dequeue\n");
       while(queue.empty()) {
         cv.wait(lock);
       }

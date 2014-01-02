@@ -6,6 +6,7 @@
 #define _CACHE_H__
 
 #include <boost/thread.hpp>
+#include <time.h>
 #include "message_queue.h"
 #include "trace.h"
 
@@ -21,14 +22,17 @@ class Cache {
     int get_num_requests();
     int set_num_hits(int);
     int set_num_requests(int);
+    int get_num_traces();
+    struct timespec get_total_latency();
 
-  private:
+  protected:
     MQueue<Trace> *queue;
-    boost::mutex mut;
     int cache_size; // maximum number of blocks
     int block_size; // block size in bytes
     int num_hits;
     int num_requests;
+    int num_traces;
+    struct timespec total_latency;
 };
 
 #endif 
