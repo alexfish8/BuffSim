@@ -1,0 +1,32 @@
+# trace.stp
+# Author: Alex Fish
+#
+# Prints a stream of I/O traces as <inode_no> <position> <num_bytes> triples
+
+probe vfs.read.return {
+        if (devname == "N/A") {}
+        else {
+          if (bytes_read > 0) {
+      	    if (stp_pid() == pid()) {} 
+	    else {
+              offset = @cast(file, "file", "kernel")->f_pos;
+              printf("R %d %d %d\n", ino, offset, bytes_read);
+	    }
+          }
+        }
+}
+
+probe vfs.write.return {
+  if (devname == "N/A") {}
+  else {
+    if (bytes_written > 0) {
+      if (stp_pid() == pid()) {} 
+      else {
+      	offset = @cast(file, "file", "kernel")->f_pos;
+      	printf("W %d %d %d\n", ino, offset, bytes_written);
+      }
+    }
+  }
+}
+
+

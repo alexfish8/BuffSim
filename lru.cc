@@ -34,6 +34,7 @@ void LRU::do_cache_request(int inode, int block, Trace t) {
       // move block to front
       cache.erase(it->second);
       cache.push_front(std::make_pair(inode, block));
+      it->second = cache.begin();
       set_num_hits(get_num_hits() + 1);
     }
 
