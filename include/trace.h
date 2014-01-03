@@ -28,6 +28,9 @@ public:
   // meta-trace that denotes the end of trace stream
   static Trace end();
 
+  // return time elapsed between start and end
+  static double elapsed(struct timespec start, struct timespec end);
+
 private:
   Trace();
 };

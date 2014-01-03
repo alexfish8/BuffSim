@@ -44,8 +44,8 @@ int main() {
 
   double nsec = (double) total_latency.tv_nsec / 1000000000L;
   double time = total_latency.tv_sec + nsec;
-  printf("total latency: %f sec\n", time); 
-  printf("average latency per trace: %f sec\n", time / num_traces);
+  printf("total latency: %10.9f sec\n", time); 
+  printf("average latency per trace: %10.9f sec\n", time / num_traces);
 }
 
 

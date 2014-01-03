@@ -20,6 +20,7 @@ static const long NSEC_PER_SEC = 1000000000L;
 // adapated from boost tokenizer tutorial
 Trace::Trace(string s) {
   clock_gettime(CLOCK_MONOTONIC, &start);
+  //clock_gettime(CLOCK_REALTIME, &start);
   tokenizer<> tok(s);
 
   if (distance(tok.begin(), tok.end()) < 4)
@@ -49,11 +50,27 @@ Trace::Trace() {
   type = END;
 }
 
+double Trace::elapsed(struct timespec start, struct timespec end) {
+  int b = 0; // borrow
+  double ret = 0;
+
+  ret = double (end.tv_nsec - start.tv_nsec) / NSEC_PER_SEC;
+  if (ret < 0) {
+    b = 1;
+    ret += 1;
+  }
+
+  ret += end.tv_sec - start.tv_sec - b;
+}
+
+
+
 struct timespec Trace::age() {
   struct timespec ret;
   struct timespec end;
 
   clock_gettime(CLOCK_MONOTONIC, &end);
+  //clock_gettime(CLOCK_REALTIME, &end);
   int b = 0; // borrow
 
   ret.tv_nsec = end.tv_nsec - start.tv_nsec;

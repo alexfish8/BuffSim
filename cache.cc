@@ -21,7 +21,6 @@ void Cache::simulate() {
   while (true) {
     Trace t = queue->dequeue();
     if (t.type == Trace::END) {
-      printf("got to the end\n");
       break;
     }
 
@@ -34,14 +33,10 @@ void Cache::simulate() {
       bytes_remaining -= block_size;
     }
 
-    struct timespec end;
-    clock_gettime(CLOCK_MONOTONIC, &end);
-
     total_latency = Trace::timespec_add(total_latency, t.age());
     num_traces++;
   }
 
-  printf("got to the actual end\n");
 }
 
 int Cache::get_num_hits() {
