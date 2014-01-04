@@ -5,5 +5,8 @@
 # build files
 *.o
 sim_manager
+sim
+traces
+
 
 
