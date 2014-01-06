@@ -1,0 +1,28 @@
+
+Thread 0
+----------
+cache hits: 412264
+cache requests: 825891
+total latency: 8.720761947 sec
+average latency per trace: 0.000012581 sec
+
+Thread 1
+----------
+cache hits: 412264
+cache requests: 825891
+total latency: 8.720739985 sec
+average latency per trace: 0.000012581 sec
+
+Thread 2
+----------
+cache hits: 412264
+cache requests: 825891
+total latency: 8.720683061 sec
+average latency per trace: 0.000012581 sec
+
+Thread 3
+----------
+cache hits: 412264
+cache requests: 825891
+total latency: 8.720936990 sec
+average latency per trace: 0.000012582 sec
