@@ -7,14 +7,19 @@
 
 #include <boost/thread.hpp>
 #include <time.h>
+#include <string>
 #include "message_queue.h"
 #include "trace.h"
+
+
+#define SIM_LRU 1
 
 class Cache {
   public:
     Cache(MQueue<Trace>*, int, int);
 
     virtual void do_cache_request(int inode, int block, Trace t) = 0;
+    virtual std::string name() = 0;
     void simulate();
     int get_cache_size();
     int get_block_size();

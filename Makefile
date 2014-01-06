@@ -2,7 +2,7 @@
 
 CC= g++
 INCLUDE = include
-LIB = -lboost_system -lboost_thread-mt
+LIB = -lboost_system -lboost_thread #-lboost_thread-mt
 CCFLAGS = -g -I $(INCLUDE) $(LIB)
 
 all: sim_manager sim

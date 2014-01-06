@@ -41,5 +41,10 @@ void LRU::do_cache_request(int inode, int block, Trace t) {
     set_num_requests(get_num_requests() + 1);
   }
 
+std::string LRU::name() {
+  return "LRU";
+}
+
+
 
 

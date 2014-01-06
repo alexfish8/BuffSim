@@ -7,6 +7,7 @@
 #include <iterator>
 #include <boost/tokenizer.hpp>
 #include <time.h>
+#include <stdio.h>
 
 
 #include "trace.h"
@@ -20,7 +21,6 @@ static const long NSEC_PER_SEC = 1000000000L;
 // adapated from boost tokenizer tutorial
 Trace::Trace(string s) {
   clock_gettime(CLOCK_MONOTONIC, &start);
-  //clock_gettime(CLOCK_REALTIME, &start);
   tokenizer<> tok(s);
 
   if (distance(tok.begin(), tok.end()) < 4)
@@ -30,8 +30,10 @@ Trace::Trace(string s) {
   tokenizer<>::iterator it = tok.begin();
   if (it->compare("R") == 0)
     type = READ;
-  else
+  else if (it->compare("W") == 0)
     type = WRITE;
+  else
+    type = END;
 
   // inode
   it++;
@@ -61,6 +63,7 @@ double Trace::elapsed(struct timespec start, struct timespec end) {
   }
 
   ret += end.tv_sec - start.tv_sec - b;
+  return ret;
 }
 
 

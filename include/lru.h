@@ -3,7 +3,7 @@
 
 #include <map>
 #include <list>
-
+#include <string>
 #include "message_queue.h"
 #include "trace.h"
 #include "cache.h"
@@ -22,6 +22,7 @@ class LRU : public Cache {
   public:
     LRU(MQueue<Trace>* queue, int max_cache_size, int block_size);
     void do_cache_request(int inode, int block, Trace t);
+    std::string name();
 };
 
 
